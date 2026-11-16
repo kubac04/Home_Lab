@@ -11,3 +11,5 @@ Grafana shows host health and failed SSH logins per source IP.
   <img src="https://img.shields.io/badge/Loki-F2CC0C?style=for-the-badge&logo=grafana&logoColor=black" />
   <img src="https://img.shields.io/badge/Alloy-F46800?style=for-the-badge&logo=grafana&logoColor=white" />
 </p>
+
+_Work in progress — next: alerting to Discord._
