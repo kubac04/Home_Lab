@@ -1,0 +1,19 @@
+loki.source.journal "read" {
+  forward_to    = [loki.write.default.receiver]
+  relabel_rules = loki.relabel.journal.rules
+  labels        = {host = "srv01", job = "journal"}
+}
+
+loki.relabel "journal" {
+  forward_to = []
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://192.168.56.10:3100/loki/api/v1/push"
+  }
+}
