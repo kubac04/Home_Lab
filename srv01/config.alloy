@@ -10,6 +10,10 @@ loki.relabel "journal" {
     source_labels = ["__journal__systemd_unit"]
     target_label  = "unit"
   }
+  rule {
+    source_labels = ["__journal_syslog_identifier"]
+    target_label = "app"
+  }
 }
 
 loki.write "default" {
