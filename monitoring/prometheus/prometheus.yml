@@ -10,5 +10,5 @@ scrape_configs:
     static_configs:
       - targets: ["node-exporter:9100"]
         labels: {instance: mon01}
-      - targets: ["192.168.56.11:9100"]
+      - targets: ["10.10.20.11:9100"]
         labels: {instance: srv01}
