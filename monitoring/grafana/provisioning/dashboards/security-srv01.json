@@ -303,6 +303,147 @@
       ],
       "title": "Użycie sudo",
       "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 16,
+        "x": 8,
+        "y": 9
+      },
+      "id": 5,
+      "options": {
+        "dedupStrategy": "none",
+        "enableInfiniteScrolling": false,
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showControls": false,
+        "showFieldSelector": false,
+        "showLevel": true,
+        "showLogAttributes": true,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "timestampResolution": "ms",
+        "unwrappedColumns": false,
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "13.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "{job=\"opnsense\"}\r\n  | pattern `<_>,<_>,<_>,<rid>,<iface>,<_>,<action>,<dir>,<_>,<_>,<_>,<_>,<_>,<_>,<_>,<_>,<proto>,<_>,<src>,<dst>,<sport>,<dport>,<_>`\r\n  | action = \"block\"\r\n  | label_format zone=`{{ if eq .iface \"vlan0.20\" }}SERVERS{{ else if eq .iface \"vlan0.30\" }}DMZ{{ else if eq .iface \"vlan0.67\" }}ATTACKER{{ else if eq .iface \"em1\" }}MGMT{{ else if eq .iface \"em0\" }}WAN{{ end }}`\r\n  | label_format detected_level=\"warn\"\r\n  | line_format \"[{{.zone}}] {{.src}} → {{.dst}}:{{.dport}} ({{.proto}})\"",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Firewall – zablokowane połączenia",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "hue",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 18
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "13.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by (zone) (\r\n  count_over_time(\r\n    {job=\"opnsense\"}\r\n      | pattern `<_>,<_>,<_>,<rid>,<iface>,<_>,<action>,<_>`\r\n      | action = \"block\"\r\n      | label_format zone=`{{ if eq .iface \"vlan0.20\" }}SERVERS{{ else if eq .iface \"vlan0.30\" }}DMZ{{ else if eq .iface \"vlan0.67\" }}ATTACKER{{ else if eq .iface \"em1\" }}MGMT{{ else if eq .iface \"em0\" }}WAN{{ end }}`\r\n    [1m]\r\n  )\r\n)",
+          "legendFormat": "{{zone}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Blokady wg strefy (na minutę)",
+      "type": "timeseries"
     }
   ],
   "preload": false,
@@ -329,5 +470,5 @@
   "timezone": "browser",
   "title": "Security ssh – srv01",
   "uid": "adkl22k",
-  "version": 7
+  "version": 10
 }
