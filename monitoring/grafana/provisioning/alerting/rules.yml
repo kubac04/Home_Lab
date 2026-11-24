@@ -93,3 +93,44 @@ groups:
             summary: "Możliwy brute force SSH na srv01 z {{ $labels.ip }} ({{ $values.A.Value }} prób w 1 min)"
           notification_settings:
             receiver: Discord
+        
+        - uid: attacker-to-mgmt
+          title: ATTACKER → MGMT
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 600
+                to: 0
+              datasourceUid: P8E80F9AEF21F6940
+              model:
+                editorMode: code
+                expr: >-
+                  sum by (src) (count_over_time({job="opnsense"}
+                  | pattern `<_>,<_>,<_>,<rid>,<iface>,<_>,<action>,<_>,<_>,<_>,<_>,<_>,<_>,<_>,<_>,<_>,<proto>,<_>,<src>,<dst>,<_>`
+                  | action = "block"
+                  | iface = "vlan0.67"
+                  | dst =~ `192\.168\.56\..*`
+                  [1m]))
+                queryType: instant
+                refId: A
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                type: threshold
+                expression: A
+                conditions:
+                  - evaluator:
+                      type: gt
+                      params: [0]
+                refId: C
+          noDataState: OK
+          execErrState: Error
+          for: 0s
+          labels:
+            severity: critical
+          annotations:
+            summary: "Strefa ATTACKER próbuje dostać się do MGMT z {{ $labels.src }} ({{ $values.A.Value }} zablokowanych pakietów w 1 min)"
+          notification_settings:
+            receiver: Discord
+        
