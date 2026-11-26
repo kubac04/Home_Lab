@@ -20,9 +20,10 @@ Dashboards, alert rules and data sources are provisioned from files in this repo
 
 ![Firewall rules](docs/firewall_rules.png)
 
-## Write-ups
+**Wazuh dashboard** – events from the srv01 and firewall agents, Suricata IDS alerts and MITRE ATT&CK techniques.
 
-- [Wazuh + Suricata](docs/wazuh-suricata.md) – host and network detection, setup and lessons learned
+
+![Wazuh + Suricata](docs/wazuh_dashboard.png) 
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=linux,ubuntu,docker,prometheus,grafana,bash,git" />
