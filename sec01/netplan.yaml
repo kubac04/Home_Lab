@@ -1,0 +1,19 @@
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: false
+      optional: true
+    enp0s8:
+      dhcp4: false
+      optional: true
+  vlans:
+    vlan20:
+      id: 20
+      link: enp0s8
+      addresses: [10.10.20.12/24]
+      routes:
+        - to: default
+          via: 10.10.20.1
+      nameservers:
+        addresses: [10.10.20.1]
